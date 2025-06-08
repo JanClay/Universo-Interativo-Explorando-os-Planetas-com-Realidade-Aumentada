@@ -1,100 +1,135 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Planetas em RA</title>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Planetas em RA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: sans-serif;
+      overflow: hidden;
+      background: black;
+    }
 
-    <!-- Meta para dispositivos móveis -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    a-scene {
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
 
-    <!-- A-Frame e AR.js -->
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
 
-    <!-- Estilo visual aprimorado -->
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-        background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
-        font-family: 'Segoe UI', sans-serif;
-        color: white;
+    #overlay h1 {
+      font-size: 6vw;
+    }
+
+    #startBtn {
+      padding: 1em 2em;
+      font-size: 5vw;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #instrucoes {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 4vw;
+      z-index: 4;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      #overlay h1, #startBtn, #instrucoes {
+        font-size: 6vw;
       }
-
-      #instructions {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        color: #ffffff;
-        text-align: center;
-        padding: 12px;
-        font-size: 16px;
-        z-index: 10;
-        backdrop-filter: blur(4px);
+      #startBtn {
+        padding: 1em 1.5em;
       }
-    </style>
-  </head>
+    }
+  </style>
+</head>
 
-  <body>
-    <!-- Instruções fixas no topo -->
-    <div id="instructions">
-      📷 Aponte a câmera para os marcadores Hiro (🌍 Terra) e Kanji (🔴 Marte) para visualizar os planetas em Realidade Aumentada.
-    </div>
+<body>
 
-    <!-- Cena com marcadores -->
-    <a-scene embedded arjs="debugUIEnabled: false">
+<main>
+  <a-scene 
+    arjs="sourceType: webcam; debugUIEnabled: true;" 
+    vr-mode-ui="enabled: false">
+    
+    <a-light type="ambient" color="#fff" intensity="0.6"></a-light>
+    <a-light type="directional" color="#fff" intensity="0.8" position="1 2 1"></a-light>
 
-      <!-- Luz ambiente e direcional -->
-      <a-light type="ambient" color="#ffffff" intensity="0.6"></a-light>
-      <a-light type="directional" color="#ffffff" intensity="0.8" position="1 2 1"></a-light>
+    <a-marker preset="hiro">
+      <a-entity geometry="primitive: sphere; radius: 0.5"
+                material="src: https://st2.depositphotos.com/2731675/6325/i/950/depositphotos_63254639-stock-photo-planet-earth-texture.jpg"
+                position="0 0.5 0"
+                rotation="-100 0 0"
+                animation="property: rotation; to: -50 0 0; loop: true; dur: 10000"></a-entity>
+      <a-text value="Terra"
+              position="0 1.2 0"
+              rotation="-90 0 0"
+              align="center"
+              color="#00ccff"
+              side="double"
+              scale="1.5 1.5 1.5"></a-text>
+    </a-marker>
 
-      <!-- MARCADOR HIRO - Planeta Terra -->
-      <a-marker preset="hiro">
-        <a-entity
-          geometry="primitive: sphere; radius: 0.5"
-          material="src: https://st2.depositphotos.com/2731675/6325/i/950/depositphotos_63254639-stock-photo-planet-earth-texture.jpg; shader: standard"
-          position="0 0.5 0"
-          rotation="-100 0 0"
-          animation="property: rotation; to: -50 0 0; loop: true; dur: 10000"
-        ></a-entity>
-        
-        <!-- Nome deitado sobre o marcador -->
-        <a-text 
-          value="Terra" 
-          position="0 1.2 0" 
-          rotation="-90 0 0" 
-          align="center" 
-          color="#00ccff" 
-          side="double" 
-          scale="1.5 1.5 1.5"
-        ></a-text>
-      </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
 
-      <!-- MARCADOR KANJI - Planeta Marte -->
-      <a-marker preset="kanji">
-        <a-entity
-          geometry="primitive: sphere; radius: 0.5"
-          material="src: https://t3.ftcdn.net/jpg/11/72/85/86/240_F_1172858601_uDEkQF4uh2TEZ3Mc0sADHZ14YT0WKOd7.jpg; shader: standard"
-          position="0 0.5 0"
-          animation="property: rotation; to: 0 450 0; loop: true; dur: 12000"
-        ></a-entity>
-        
-        <!-- Nome deitado sobre o marcador -->
-        <a-text 
-          value="Marte" 
-          position="0 1.2 0" 
-          rotation="-90 0 0" 
-          align="center" 
-          color="#ff6666" 
-          side="double" 
-          scale="1.5 1.5 1.5"
-        ></a-text>
-      </a-marker>
+  <div id="overlay">
+    <h1>Explorar Planetas em RA</h1>
+    <button id="startBtn" onclick="iniciar()">🚀 Iniciar</button>
+  </div>
 
-      <!-- Câmera -->
-      <a-entity camera></a-entity>
+  <div id="instrucoes">📷 Aponte para o marcador Hiro (🌍 Terra)</div>
+</main>
 
-    </a-scene>
-  </body>
+<script>
+  function iniciar() {
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("instrucoes").style.display = "block";
+
+    const cena = document.querySelector('a-scene');
+    if (cena.hasLoaded) {
+      cena.enterVR();
+    } else {
+      cena.addEventListener('loaded', () => cena.enterVR());
+    }
+  }
+</script>
+
+</body>
 </html>
